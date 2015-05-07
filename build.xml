@@ -1,0 +1,83 @@
+<project
+    name="Simple Agent"
+    basedir=".."
+    default="build_release" >
+
+    <description>
+		Simple Agent Build Script
+    </description>
+
+    <property file="build.properties" />
+
+    <path id="project.class.path" >
+
+        <fileset dir="${lib}" >
+
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <target name="init" >
+
+        <delete dir="${tempbuild}" />
+
+        <mkdir dir="${tempbuild}" />
+    </target>
+
+    <target
+        name="compile"
+        depends="init"
+        description="compile the source " >
+
+        <!-- Compile the java code from ${src} into ${build} -->
+
+        <mkdir dir="${tempbuild}/${classes}" />
+
+        <javac
+            destdir="${tempbuild}/${classes}"
+            srcdir="${src}"
+            target="${javaClassTarget}" >
+
+            <classpath refid="project.class.path" />
+        </javac>
+    </target>
+
+    <target
+        name="build_release"
+        depends="compile"
+        description="generate a distribution" >
+
+        <!-- Create the distribution directory -->
+
+        <copy todir="${tempbuild}" >
+
+            <fileset file="${license_file}" />
+            <fileset file="${readme_file}" />
+        </copy>
+    	
+    	<unzip src="${lib}/log4j-1.2.14.jar" dest="${tempbuild}/${classes}"/>
+        
+        <jar jarfile="${release}/${main_jar}" >
+        	
+        	<fileset
+        		dir="config/"
+        		includes="log4j.properties" />
+
+            <fileset
+                dir="${tempbuild}/${classes}"
+                excludes="com/test/instrumentation/test/**" />
+
+            <manifest>
+
+                <attribute
+                    name="Premain-Class"
+                    value="${manifest-premain-class}" />
+                
+            </manifest>
+            
+        </jar>
+
+        <delete dir="${tempbuild}" />
+    </target>
+
+</project>
