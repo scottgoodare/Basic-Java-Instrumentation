@@ -8,6 +8,8 @@
     </description>
 
     <property file="build.properties" />
+	
+	<echo message="Lib: ${lib}"/>
 
     <path id="project.class.path" >
 
