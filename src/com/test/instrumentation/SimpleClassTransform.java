@@ -16,7 +16,9 @@ public class SimpleClassTransform implements ClassFileTransformer {
 			byte[] classfileBuffer) throws IllegalClassFormatException {
 		// TODO Auto-generated method stub
 		
-		LOG.debug("Class To Transform: " + className);
+		if ( !className.startsWith("java") && !className.startsWith("sun") 
+				&& !className.startsWith("org/omg") && !className.startsWith("com/sun") )
+			LOG.debug("Class To Transform: " + className);
 		
 		return classfileBuffer;
 	}
